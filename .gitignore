@@ -1,3 +1,9 @@
+## Added gitignores
+
+test.py
+
+## Initially Set Python gitignores
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
