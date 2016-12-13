@@ -1,0 +1,6 @@
+connecting to: irc.ozinger.org
+b':bassoon.irc.ozinger.org NOTICE Auth :*** Looking up your hostname...\r\n'
+b':bassoon.irc.ozinger.org NOTICE Auth :*** Could not resolve your hostname: Domain name not found; using your IP address (175.196.154.150) instead.\r\n'
+b'PING :@g@X}_zYQ^\r\n:bassoon.irc.ozinger.org NOTICE Hiyuki :*** If you are having problems connecting due to ping timeouts, please type /quote PONG @g@X}_zYQ^ or /raw PONG @g@X}_zYQ^ now.\r\n:bassoon.irc.ozinger.org 451 PRIVMSG :You have not registered\r\n'
+b':bassoon.irc.ozinger.org 451 JOIN :You have not registered\r\n'
+b'ERROR :Closing link: (Hiyuki@175.196.154.150) [Registration timeout]\r\n'
