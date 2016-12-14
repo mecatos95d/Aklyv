@@ -1,31 +1,38 @@
+#-*- coding: utf-8 -*-
+
+### This program try to connect, and connect, and ping timeout-rejects.
+
 import socket
 import sys
 
-server = "irc.ozinger.org"       #settings
+# Initial Settings
+server = "irc.ozinger.org"
 channel = "#XGC"
-botnick = "Hiyuki"
+botName = "HiyukiBot"
+botDescription = "HiyukiBot"
+botNick = "Hiyuki"
 
 global irc
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
 
 def send(msg):
-   irc.send(msg.encode())
+   irc.send(msg.encode('utf-8'))
 
-print("connecting to:", server)
-irc.connect((server, 6667)) #connects to the serverx
-send("USER "+ botnick +" "+ botnick +" "+ botnick +" :This is a fun bot!\n") #user authentication
-send("NICK "+ botnick +"\n")                            #sets nick
-send("PRIVMSG nickserv :iNOOPE\r\n")    #auth
-send("JOIN "+ channel +"\n")        #join the chan
+irc.connect((server, 6667)) #connects to the server
+send("USER " + botName +" " + botName +" " + botName +" :" + botDescription + "\n") #user authentication
+send("NICK " + botNick +"\n") #sets nick
+send("PRIVMSG nickserv :iNOOPE\r\n") #auth
 
-while True:    #puts it in a loop
-   text=irc.recv(2040)  #receive the text
-   if len(text) != 0:
-      print(text)   #print text to console
-
-   #if text.find('PING') != -1:                          #check if 'PING' is found
-   #   irc.send('PONG ' + text.split() [1] + '\r\n') #returnes 'PONG' back to the server (prevents pinging out!)
-
-input('Press ENTER to exit')
-
-### This program try to connect, and connect, and ping timeout-rejects.
+while True: # In a loop
+    text=irc.recv(2040).decode('utf-8') #receive the text
+    if len(text) != 0:
+        print(text) #print text to console
+        if text.find("QUIT") != -1:
+            send("QUIT\n") # QUIT MSG TEST
+            break # Temporary Quit Code
+        if text.find('Closing link') != -1:
+            break
+        if text.find('PING') != -1: # REPLY FIRST PING
+            ping_msg = text[5:]
+            send("PONG " + ping_msg + "\n")
+            send("JOIN " + channel +"\n") #join the chan
