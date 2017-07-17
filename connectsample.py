@@ -2,16 +2,17 @@
 
 ### This program try to connect, and connect, and ping timeout-rejects.
 
+import 'modules/ping'
 import socket
 import time
 import sys
 
 # Initial Settings
 server = "irc.ozinger.org"
-channels = ["TOZ", "XGC"]
-botName = "HiyukiBot"
-botDescription = "HiyukiBot: Bot Mk.3 by TOZ57"
-botNick = "Hiyuki"
+channels = ["TOZ", "Chaser", "XGC"]
+botName = "AklyvBot"
+botDescription = "Aklyv: Bot Mk.3 by TOZ57"
+botNick = "Aklyv"
 
 global irc
 irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #defines the socket
