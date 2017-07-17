@@ -2,7 +2,6 @@
 
 ### This program try to connect, and connect, and ping timeout-rejects.
 
-import 'modules/ping'
 import socket
 import time
 import sys
