@@ -1,0 +1,34 @@
+# Should contain options on [bot] and [alt].
+
+### Possible seperators in option (channels)
+# ' '	(space)
+# '.'	(dot)
+# ','	(comma)
+# ':'	(colon)
+# ';'	(semicolon)
+# '/'	(slash)
+# '\n'	(change-line)
+
+[bot] # Option for main bot running.
+	server: this.is.irc.server
+	port: 1234
+	channels: channel1, channel2
+	nick: nick_name
+	name: register_name
+	description: bot_description
+
+[alt] # Option for test bot running. Activate with -d option.
+	server: this.is.irc.server
+	port: 1234
+	channels: test1, test2
+	nick: nick_test
+	name: register_test
+	description: bot_test_description
+
+[example]
+	server: this.is.irc.server
+	port: 1234
+	channels: channel1, channel2
+	nick: nick_name
+	name: register_name
+	description: bot_description
