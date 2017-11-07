@@ -40,8 +40,8 @@ def init():
 		send_raw(irc, "USER " + option['name'] + " " + option['name'] + " " + option['name'] + " :" + option['description'] + "\n") # User authentication
 		send_raw(irc, "NICK " + option['nick'] +"\n") # Nick setting
 		# send_raw(irc, "PRIVMSG nickserv :iNOOPE\r\n") # Auth maybe...
-		for channel in parse_config_list(option['channels']):
-			send_raw(irc, "JOIN #" + channel + "\n") # Join channel
+
+		channels = parse_config_list(option['channels'])
 
 		if parser.parse_args().print: # When print mode is running
 			pass
@@ -51,7 +51,11 @@ def init():
 			logging.exception("Error caused by : " + str(ex))
 		sys.exit(0)
 
-	return irc
+	return (irc, channels)
+
+def join(irc, channels): # Temporary function for joining 
+	for channel in channels:
+		send_raw(irc, "JOIN #" + channel + "\n") # Join channel
 
 def run():
 	note = []
@@ -61,7 +65,7 @@ def run():
 	lasttime = time.time()
 	timeout = 200
 
-	irc = init()
+	(irc, channels) = init()
 
 	while True: # In a loop
 		if (time.time() - lasttime) > timeout: # Current problem : While-phrase runs if message came in.
@@ -70,6 +74,13 @@ def run():
 		text = message(irc)
 		msgSet = parse_msg(text)
 		if len(text) != 0:
+			if not joined:
+				join(irc, channels)
+				if 0 < len(msgSet):
+					if 1 < len(msgSet[0]):
+						if msgSet[0][1] == "JOIN": # Reply Example - :Aklyv2!Aklyv_Test_@143.248.229.200 JOIN :#TOZ
+							joined = True
+
 			if text.find('PING') != -1: # REPLY FIRST PING
 				ping_msg = text[5:]
 				send_raw(irc, "PONG " + ping_msg + "\n")
@@ -98,6 +109,9 @@ def run():
 			
 			if len(chat) != 0:
 				print("PARSE| " + str(chat) + "\n")
+				if chat[0] == '*접속' or chat[0] == "*join": # Temp function... :(
+					join(irc, channels)
+
 				if chat[0] == '*핑' or chat[0] == "*ping":
 					send_msg(irc, msgSet[0][2], get_nick(msgSet) + ", 퐁\n")
 
@@ -140,7 +154,31 @@ def run():
 							elif exp_end < 50 or exp_end > 500:
 								send_msg(irc, msgSet[0][2], "경험치 입력 범위(50~500)를 벗어났습니다! 입력 > " + str(exp_end))
 							else:
-								result = expCalc.run(exp_start, exp_end, exp_left)
+								result = expCalc.run_diff(exp_start, exp_end, exp_left)
+								send_msg(irc, msgSet[0][2], result)
+						else:
+							send_msg(irc, msgSet[0][2], "입력이 잘못되었습니다! 입력 > " + chat[1] + " / " + chat[2])
+
+				if chat[0] in ["*경험치+", "*경+", "*exp+", "*e+"]:
+					if len(chat) < 3:
+						send_msg(irc, msgSet[0][2], "월탱 승무원 경험치 명령입니다. *경험치+ <시작%> <추가경험치> [<잔여경험치>] 로 계산이 가능합니다.")
+					else:
+						if is_int_str(chat[1]) and is_int_str(chat[2]):
+							exp_start = int(chat[1])
+							exp_gain = int(chat[2])
+							exp_left = 0
+							if len(chat) >= 4:
+								if is_int_str(chat[3]):
+									exp_left = int(chat[3])
+									if exp_left < 0:
+										exp_left = 0
+
+							if exp_start < 50 or exp_start > 500:
+								send_msg(irc, msgSet[0][2], "경험치 입력 범위(50~500)를 벗어났습니다! 입력 > " + str(exp_start))
+							elif exp_gain <= 0 or exp_gain > 3246446:
+								send_msg(irc, msgSet[0][2], "추가되는 승무원 경험치가 잘못되었습니다! 입력 > " + str(exp_gain))
+							else:
+								result = expCalc.run_acc(exp_start, exp_gain, exp_left)
 								send_msg(irc, msgSet[0][2], result)
 						else:
 							send_msg(irc, msgSet[0][2], "입력이 잘못되었습니다! 입력 > " + chat[1] + " / " + chat[2])

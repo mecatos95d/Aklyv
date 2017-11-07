@@ -3,6 +3,10 @@
 setting
 test.py
 
+# MAC OS cover
+.DS_Store
+*/.DS_Store
+
 ## Initially Set Python gitignores
 
 # Byte-compiled / optimized / DLL files
